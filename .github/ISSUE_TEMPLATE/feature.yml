@@ -1,0 +1,23 @@
+name: Feature request
+description: Propose a product or engineering change
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+  - type: dropdown
+    id: mvp
+    attributes:
+      label: Fits current MVP?
+      options:
+        - "Yes — needed for MVP"
+        - "MVP+1"
+        - "Learning / later"
+        - "Unsure"

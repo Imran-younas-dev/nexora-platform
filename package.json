@@ -1,12 +1,20 @@
 {
   "name": "nexora-platform",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.1.0",
   "packageManager": "pnpm@11.5.1",
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
-    "dev": "pnpm --parallel --filter ./apps/* dev",
-    "build": "pnpm --recursive build",
-    "lint": "pnpm --recursive lint",
-    "test": "pnpm --recursive test"
+    "dev": "pnpm --parallel --filter \"./apps/*\" run dev",
+    "build": "pnpm --recursive --filter \"./apps/*\" run build",
+    "lint": "pnpm --recursive --filter \"./apps/*\" run lint",
+    "test": "pnpm --filter backend test",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:migrate": "pnpm --filter backend prisma:migrate",
+    "db:generate": "pnpm --filter backend prisma:generate",
+    "db:studio" : "pnpm --filter backend prisma:studio"
   }
 }

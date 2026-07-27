@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum IncidentStatus {
+  OPEN
+  INVESTIGATING
+  RESOLVED
+  CLOSED
+}
+
+enum IncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+/// Soft multi-tenancy: every tenant-owned row carries organization_id,
+/// even while MVP uses a single default organization.
+model Incident {
+  id             String           @id @default(cuid())
+  organizationId String           @default("org_default") @map("organization_id")
+  title          String
+  description    String?
+  status         IncidentStatus   @default(OPEN)
+  severity       IncidentSeverity @default(MEDIUM)
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+
+  @@index([organizationId])
+  @@index([status])
+  @@map("incidents")
+}
