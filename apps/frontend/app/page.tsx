@@ -1,65 +1,166 @@
-import Image from "next/image";
+'use client';
+
+import { FormEvent, useCallback, useEffect, useState } from 'react';
+
+type Incident = {
+  id: string;
+  title: string;
+  description: string | null;
+  status: string;
+  severity: string;
+  createdAt: string;
+};
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000';
 
 export default function Home() {
+  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const loadIncidents = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_URL}/incidents`);
+      if (!response.ok) {
+        throw new Error(`API responded with ${response.status}`);
+      }
+      const data = (await response.json()) as Incident[];
+      setIncidents(data);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Failed to reach the API. Is the backend running?',
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadIncidents();
+  }, [loadIncidents]);
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!title.trim()) return;
+
+    setSubmitting(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_URL}/incidents`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: title.trim(),
+          description: description.trim() || undefined,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Create failed with ${response.status}`);
+      }
+
+      setTitle('');
+      setDescription('');
+      await loadIncidents();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create incident');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-10 px-6 py-16">
+      <header className="space-y-3">
+        <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
+          Nexora · Phase 0
+        </p>
+        <h1 className="text-4xl font-semibold tracking-tight text-zinc-950">
+          Incidents
+        </h1>
+        <p className="max-w-xl text-base leading-7 text-zinc-600">
+          Foundation check: the web app talks to the Nest API and Postgres.
+          Auth, AI triage, and queues come in later phases.
+        </p>
+      </header>
+
+      <section className="space-y-4">
+        <h2 className="text-lg font-medium text-zinc-900">Create incident</h2>
+        <form onSubmit={onSubmit} className="flex flex-col gap-3">
+          <input
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="Title"
+            className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-zinc-900"
+            required
+            minLength={3}
+          />
+          <textarea
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+            placeholder="Description (optional)"
+            rows={3}
+            className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-zinc-900"
+          />
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-fit rounded-md bg-zinc-950 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+          >
+            {submitting ? 'Creating…' : 'Create'}
+          </button>
+        </form>
+      </section>
+
+      <section className="space-y-4">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-lg font-medium text-zinc-900">Open list</h2>
+          <button
+            type="button"
+            onClick={() => void loadIncidents()}
+            className="text-sm text-zinc-600 underline-offset-2 hover:underline"
+          >
+            Refresh
+          </button>
+        </div>
+
+        {error ? (
+          <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {error}
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        ) : null}
+
+        {loading ? (
+          <p className="text-sm text-zinc-500">Loading…</p>
+        ) : incidents.length === 0 ? (
+          <p className="text-sm text-zinc-500">No incidents yet.</p>
+        ) : (
+          <ul className="divide-y divide-zinc-200 border border-zinc-200">
+            {incidents.map((incident) => (
+              <li key={incident.id} className="space-y-1 px-4 py-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-medium text-zinc-950">
+                    {incident.title}
+                  </span>
+                  <span className="text-xs uppercase tracking-wide text-zinc-500">
+                    {incident.status} · {incident.severity}
+                  </span>
+                </div>
+                {incident.description ? (
+                  <p className="text-sm text-zinc-600">{incident.description}</p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    </main>
   );
 }
