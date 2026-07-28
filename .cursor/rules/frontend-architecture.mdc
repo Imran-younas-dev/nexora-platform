@@ -1,0 +1,13 @@
+---
+description: Frontend architecture rules for the Next.js app
+globs: apps/frontend/**/*
+alwaysApply: false
+---
+
+# Frontend Architecture
+
+- Keep the frontend thin and workflow-oriented.
+- Prefer UI state, rendering, and API consumption over domain logic in the client.
+- Treat the backend as the source of truth for business rules and persistence.
+- Avoid adding complex client-side architecture before the MVP loop requires it.
+- If the frontend introduces a new user workflow, verify it still aligns with `docs/product/MVP.md`.

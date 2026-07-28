@@ -1,0 +1,15 @@
+---
+description: Documentation rules to avoid duplicate knowledge
+globs: "**/*.md"
+alwaysApply: false
+---
+
+# Documentation Source Of Truth
+
+- Each document should have one responsibility.
+- Update the existing source-of-truth document instead of creating a parallel explainer.
+- `README.md` is for setup and orientation.
+- `AGENTS.md` is for fast repository context for AI assistants and new contributors.
+- `docs/architecture/` is for system structure and boundaries.
+- `docs/decisions/` is for long-lived architectural choices.
+- `docs/engineering/feature-workflow.md` is for lightweight planning structure.
