@@ -1,0 +1,14 @@
+---
+description: Backend architecture rules for the NestJS API
+globs: apps/backend/**/*
+alwaysApply: false
+---
+
+# Backend Architecture
+
+- Keep `apps/backend` as a modular monolith unless an ADR says otherwise.
+- Put business logic in backend modules, not in the frontend.
+- Use Prisma as the data access layer and `schema.prisma` as the database source of truth.
+- Preserve soft multi-tenancy patterns such as `organization_id` on tenant-owned data.
+- Prefer additive changes over speculative abstractions.
+- If backend boundaries materially change, update `docs/architecture/current.md` and consider an ADR.

@@ -1,0 +1,14 @@
+---
+description: Core repository context and documentation hierarchy
+alwaysApply: true
+---
+
+# Core Repository Context
+
+- Read `AGENTS.md` at the start of repository-level work.
+- Treat `docs/product/MVP.md` as the source of truth for current scope.
+- Treat `docs/architecture/current.md` as the source of truth for implemented architecture.
+- Treat `docs/architecture/target.md` as the source of truth for near-term intended architecture.
+- Prefer updating an existing authoritative doc over creating a new one.
+- Keep solutions simple and aligned with the current milestone.
+- Do not add shared packages, microservices, queues, or infrastructure early unless the change explicitly requires them.

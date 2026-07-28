@@ -1,0 +1,13 @@
+---
+description: Prisma schema and database change guidance
+globs: apps/backend/prisma/**/*
+alwaysApply: false
+---
+
+# Prisma Data Model
+
+- Keep Prisma schema changes aligned with the current MVP and architecture docs.
+- Preserve `organization_id` unless a documented tenancy decision changes it.
+- Prefer explicit migrations for persistent data changes.
+- Update ADRs when a schema change carries long-lived architectural consequences.
+- Keep Postgres as the system of record; do not introduce duplicate persistence paths casually.
