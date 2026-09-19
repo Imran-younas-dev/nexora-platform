@@ -1,6 +1,6 @@
 # Nexora
 
-![Nexora — AI-native Engineering Operations Platform](docs/assets/nexora-banner.png)
+![Nexora — AI-native Engineering Operations Platform](docs/Nexora — AI-native Engineering Operations Platform.png)
 
 AI-native Engineering Operations Platform.
 
