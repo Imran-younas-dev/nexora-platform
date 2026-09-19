@@ -1,5 +1,7 @@
 # Nexora
 
+![Nexora — AI-native Engineering Operations Platform](docs/assets/nexora-banner.png)
+
 AI-native Engineering Operations Platform.
 
 **Current phase:** Phase 0 - Foundations
