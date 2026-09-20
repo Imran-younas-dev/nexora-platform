@@ -4,6 +4,7 @@ Nexora is both a product and a learning platform.
 
 | Doc | Purpose |
 |-----|---------|
+| [case-study.md](./case-study.md) | Short interview case study: problem, product, and how to explain Nexora |
 | [curriculum.md](./curriculum.md) | Phase-by-phase engineering curriculum (system design, AI, DevOps) |
 | [../roadmap/product-milestones.md](../roadmap/product-milestones.md) | What we ship as a product |
 | [../decisions/](../decisions/) | ADRs for real decisions |
