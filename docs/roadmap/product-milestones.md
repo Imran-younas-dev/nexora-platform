@@ -4,6 +4,8 @@ Shippable product outcomes. For the detailed learning curriculum (concepts, inte
 
 **Rule:** Curriculum phases may overshoot the product. Product MVP freezes when [MVP.md](../product/MVP.md) done criteria are met.
 
+Day-by-day execution of M0 through M3 is in [30-day-plan.md](./30-day-plan.md). That schedule ends when the MVP done criteria are met.
+
 ## M0 — Foundations (current)
 
 - [x] pnpm monorepo wiring (single lockfile)
